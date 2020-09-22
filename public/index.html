@@ -13,15 +13,31 @@
         <div id="fail">
             <p>We can't connect you because we don't find your microphone and camera.</p>
         </div>
-        <div id="connect" >
-            <div class="input-field">
-                <input placeholder="Placeholder" id="inputRoom" type="text">
-                <label for="inputRoom">Room name:</label>
-            </div>
-            <a id="join" class="waves-effect waves-light btn">Enter</a>
+        <div id="connect" class="row" >
+            <div class="col s12 m4 offset-m4" >
+                <div class="card">
+                    <div class="card-action teal lighten-1 white-text" >
+                        <h3 class="card-title" >Video Chat P2P</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="input-field">
+                            <input placeholder="room name" id="inputRoom" type="text">
+                            <label for="inputRoom">Room name:</label>
+                        </div><br>
+                        <button id="join" style="width: 100%;" class="btn-large waves-effect waves-dark">Enter</button>
+                    </div>
+                </div>
+            </div>            
         </div>
         <div id="players">
-            <button id="leave">disconnect</button>
+            <nav>
+                <div class="nav-wrapper teal">
+                  <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a id="leave"><i class="material-icons">exit_to_app</i></a></li>
+                  </ul>
+                </div>
+            </nav>
+            
             <video id="local-player" autoplay muted></video>
         </div>
         <script type="text/javascript" src="js/materialize.min.js"></script>
