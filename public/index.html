@@ -1,22 +1,30 @@
 <html>
-    <header>
+    <head>
         <title>Video chat</title>
-    </header>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
     <body>
+        
         <div id="loading">
             <img src="img/loading.gif" alt="loading" >
         </div>
         <div id="fail">
             <p>We can't connect you because we don't find your microphone and camera.</p>
         </div>
-        <div id="connect">
-            Room: <input id="inputRoom" type="text" >
-            <button id="join">Enter</button>
+        <div id="connect" >
+            <div class="input-field">
+                <input placeholder="Placeholder" id="inputRoom" type="text">
+                <label for="inputRoom">Room name:</label>
+            </div>
+            <a id="join" class="waves-effect waves-light btn">Enter</a>
         </div>
         <div id="players">
             <button id="leave">disconnect</button>
             <video id="local-player" autoplay muted></video>
         </div>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
         <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
         <script src="js/user.js"></script>
         <script src="js/peer.js"></script>
