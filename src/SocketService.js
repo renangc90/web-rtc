@@ -26,6 +26,7 @@ class SocketService {
                 socket.to(room).emit(EVENT_CALL, { id: socket.id })
 
                 socket.on(EVENT_OFFER, (data) => {
+                    console.log(`${socket.id} offering ${data.id}`)
                     socket.to(data.id).emit(EVENT_OFFER, {
                         id: socket.id,
                         offer: data.offer
@@ -33,6 +34,7 @@ class SocketService {
                 })
 
                 socket.on(EVENT_ANSWER, (data) => {
+                    console.log(`${socket.id} answering ${data.id}`)
                     socket.to(data.id).emit(EVENT_ANSWER, {
                         id: socket.id,
                         answer: data.answer
@@ -40,6 +42,7 @@ class SocketService {
                 })
 
                 socket.on(EVENT_CANDIDATE, (data) => {
+                    console.log(`${socket.id} sending a candidate to ${data.id}`)
                     socket.to(data.id).emit(EVENT_CANDIDATE, {
                         id: socket.id,
                         candidate: data.candidate
@@ -47,6 +50,7 @@ class SocketService {
                 })
 
                 socket.on(EVENT_DISCONNECT, () => {
+                    console.log(`${socket.id} disconnected`)
                     this.io.emit(EVENT_DISCONNECT_USER, {
                         id: socket.id
                     })

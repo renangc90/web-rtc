@@ -1,45 +1,41 @@
 function showLoading() {
     showPanel('loading')
-    hidePannel('fail')
-    hidePannel('connect')
-    hidePannel('players')
+    hidePanel('fail')
+    hidePanel('connect')
+    hidePanel('players')
 }
 
 function showFail() {
-    hidePannel('loading')
+    hidePanel('loading')
     showPanel('fail')
-    hidePannel('connect')
-    hidePannel('players')
+    hidePanel('connect')
+    hidePanel('players')
 }
 
 function showForm() {
-    hidePannel('loading')
-    hidePannel('fail')
+    hidePanel('loading')
+    hidePanel('fail')
     showPanel('connect')
-    hidePannel('players')
+    hidePanel('players')
 }
 
 function showPlayers() {
-    hidePannel('loading')
-    hidePannel('fail')
-    hidePannel('connect')
+    hidePanel('loading')
+    hidePanel('fail')
+    hidePanel('connect')
     showPanel('players')
 }
 
-function addVideoPlayer(id, stream) {
+function addVideoPlayer(stream) {
     var player = document.createElement('video')
-    player.id = id
     player.srcObject = stream
     player.autoplay = true
     document.getElementById('players').appendChild(player)
+
+    return player
 }
 
-function removeElement(id) {
-    var element = document.getElementById(id)
-    element.parentNode.removeChild(element)
-}
-
-function hidePannel(name) {
+function hidePanel(name) {
     document.getElementById(name).style.display = "none"
 }
 

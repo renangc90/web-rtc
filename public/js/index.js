@@ -43,61 +43,27 @@ function initServerConnection(room) {
         var user = users.get(data.id)
         if(user) {
             users.delete(data.id)
-            removeElement(data.id)
-            destroyPeer(user.pc)
+            user.selfDestroy()
         }
     })
     
     socket.on('call',  function (data) {
-        var pc = createPeer(data.id)
-        let user = {
-            id: data.id,
-            pc: pc
-        }
+        let user = new User(data.id)
+        user.pc = createPeer(user)
         users.set(data.id, user)
 
-        pc.createOffer().then(function (offer) {
-            pc.setLocalDescription(offer).then(function () {
-                socket.emit('offer', {
-                    id: data.id,
-                    offer: offer
-                })
-            })
-        })
+        createOffer(user.pc, data.id, socket)
     })
 
     socket.on('offer',  function (data) {
         var user = users.get(data.id)
         if (user) {
-            user.pc.setRemoteDescription(data.offer).then(function () {
-                pc.createAnswer().then(function(answer) {
-                    pc.setLocalDescription(answer).then(function() {
-                        socket.emit('answer', {
-                            id: data.id,
-                            answer: answer
-                        })
-                    })
-                })
-            })
+            answerPeer(user.pc, data.offer, data.id, socket)
         } else {
-            var pc = createPeer(data.id)
-
-            let user = {
-                id: data.id,
-                pc: pc
-            }
+            let user = new User(data.id)
+            user.pc = createPeer(user)
             users.set(data.id, user)
-
-            pc.setRemoteDescription(data.offer).then(function () {
-                pc.createAnswer().then(function(answer) {
-                    pc.setLocalDescription(answer).then(function() {
-                        socket.emit('answer', {
-                            id: data.id,
-                            answer: answer
-                        })
-                    })
-                })
-            })
+            answerPeer(user.pc, data.offer, data.id, socket)
         }
     })
 
@@ -113,13 +79,9 @@ function initServerConnection(room) {
         if (user) {
             user.pc.addIceCandidate(data.candidate)
         } else {
-            var pc = createPeer(data.id)
-            pc.addIceCandidate(data.candidate)
-
-            let user = {
-                id: data.id,
-                pc: pc
-            }
+            let user = new User(data.id)
+            user.pc = createPeer(user)
+            user.pc.addIceCandidate(data.candidate)
             users.set(data.id, user)
         }
     })
@@ -137,50 +99,10 @@ function initServerConnection(room) {
     return socket
 }
 
-function createPeer (remoteSocketId) {
-    const rtcConfiguration = {
-        iceServers: [{
-          urls: 'stun:stun.l.google.com:19302' // Google's public STUN server
-        }]
-    }
-    var pc = new RTCPeerConnection(rtcConfiguration)
-    pc.onicecandidate = function (event) {
-        if(!event.candidate) {
-            return
-        }
-
-        socket.emit('candidate', {
-            id: remoteSocketId,
-            candidate: event.candidate
-        })
-    }
-
-    for (const track of myStream.getTracks()) {
-        pc.addTrack(track, myStream);
-    }
-
-    pc.ontrack = function (event) {
-        if (document.getElementById(remoteSocketId)) {
-            return
-        }
-        addVideoPlayer(remoteSocketId, event.streams[0])
-    }
-    
-    return pc
-}
-
-function destroyPeer (pc) {
-    pc.close()
-    pc.onicecandidate = null
-    pc.ontrack = null
-    pc = null
-}
-
 function leave() {
     socket.close()
-    for(user in users) {
-        removeElement(data.id)
-        destroyPeer(user.pc)
+    for(var user of users.values()) {
+        user.selfDestroy()
     }
     users.clear()
     showForm()
