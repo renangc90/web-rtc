@@ -7,30 +7,34 @@ const { RTCPeerConnection, RTCSessionDescription } = window;
 
 document.addEventListener('DOMContentLoaded', function() {
     showLoading()
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(function (stream) {
-            myStream = stream
-            setLocalPlayerStream()
-            showForm()
-        }).catch(function (err) {
-            console.log(err)
-            showFail()
-        })
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(function (stream) {
+        myStream = stream
+        setLocalPlayerStream()
+        showForm()
+    }).catch(function (err) {
+        console.log(err)
+        showFail()
+    })
+
+    document.getElementById('roomForm').addEventListener('submit', function (e) {
+        e.preventDefault()
+        room = document.getElementById('inputRoom').value
+    
+        if (room) {
+            socket = initServerConnection(room)
+        }
+    })
+
+    document.getElementById('leave').addEventListener('click', function (e) {
+        e.preventDefault()
+        leave()
+    })
+
+    var elems = document.querySelectorAll('.materialbox')
+    M.Materialbox.init(elems)
+
 }, false)
-
-document.getElementById('join').addEventListener('click', function (e) {
-    e.preventDefault()
-    room = document.getElementById('inputRoom').value
-
-    if (room) {
-        socket = initServerConnection(room)
-    }
-})
-
-document.getElementById('leave').addEventListener('click', function (e) {
-    e.preventDefault()
-    leave()
-})
 
 function initServerConnection(room) {
     var socket = io({

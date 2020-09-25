@@ -6,8 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        
-        <div id="loading" class="row">
+        <div id="loading" class="center">
             <img src="img/loading.gif" alt="loading" >
         </div>
         <div id="fail" class="row">
@@ -26,14 +25,16 @@
                         <h3 class="card-title" >Video Chat P2P</h3>
                     </div>
                     <div class="card-content">
-                        <div class="input-field">
-                            <input placeholder="room name" id="inputRoom" type="text">
-                            <label for="inputRoom">Room name:</label>
-                        </div><br>
-                        <button id="join" style="width: 100%;" class="btn-large waves-effect waves-dark">Enter</button>
+                        <form id="roomForm" >
+                            <div class="input-field">
+                                <input id="inputRoom" placeholder="room name" type="text" required>
+                                <label for="inputRoom">Room name:</label>
+                            </div><br>
+                            <button type="submit" style="width: 100%;" class="btn-large waves-effect waves-dark">Enter</button>
+                        </form>
                     </div>
                 </div>
-            </div>            
+            </div>
         </div>
         <div id="players">
             <nav>
@@ -44,11 +45,10 @@
                 </div>
             </nav>
             <div class="row">
-                <div class="col s7 push-s5"><span class="flow-text">This div is 7-columns wide on pushed to the right by 5-columns.</span></div>
-                <div class="col s5 pull-s7"><span class="flow-text">5-columns wide pulled to the left by 7-columns.</span></div>
+                <div class="col s12 m6 14">
+                    <video id="local-player" class="responsive-img card materialbox" autoplay muted></video>
+                </div>
             </div>
-            
-            <video id="local-player" autoplay muted></video>
         </div>
         <script type="text/javascript" src="js/materialize.min.js"></script>
         <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
