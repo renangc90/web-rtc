@@ -6,7 +6,6 @@ const users = new Map()
 const { RTCPeerConnection, RTCSessionDescription } = window;
 
 document.addEventListener('DOMContentLoaded', function() {
-    showLoading()
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(function (stream) {
         myStream = stream
@@ -31,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
         leave()
     })
 
-    var elems = document.querySelectorAll('.materialbox')
-    M.Materialbox.init(elems)
+    var localVideo = document.getElementById('local-player')
+    M.Materialbox.init(localVideo)
 
 }, false)
 

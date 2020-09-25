@@ -36,11 +36,11 @@ function addVideoPlayer(stream) {
 }
 
 function hidePanel(name) {
-    document.getElementById(name).style.display = "none"
+    document.getElementById(name).classList.add("hide")
 }
 
 function showPanel(name) {
-    document.getElementById(name).style.display = "block"
+    document.getElementById(name).classList.remove("hide")
 }
 
 function setLocalPlayerStream() {
