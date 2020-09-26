@@ -27,12 +27,11 @@ function showPlayers() {
 }
 
 function addVideoPlayer(stream) {
-    var player = document.createElement('video')
-    player.srcObject = stream
-    player.autoplay = true
-    document.getElementById('players').appendChild(player)
-
-    return player
+    var template = new DOMParser().parseFromString('<div class="col"><div class="videoWrapper card"><video class="responsive-video" autoplay></video></div></div>', 'text/html')
+    template.getElementsByTagName('video')[0].srcObject = stream
+    var  divPlayer = template.body.childNodes[0]
+    document.getElementById('players-row').appendChild(divPlayer)
+    return divPlayer
 }
 
 function hidePanel(name) {
@@ -45,4 +44,27 @@ function showPanel(name) {
 
 function setLocalPlayerStream() {
     document.getElementById('local-player').srcObject = myStream
+    document.getElementById('preview-player').srcObject = myStream
+}
+
+function removeAllMessages() {
+    var parent = document.getElementById('message-printer')
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+function addMessage(message) {
+    var parent = document.getElementById('message-printer')
+    var p = document.createElement('p')
+    p.innerHTML = message
+
+    parent.appendChild(p)
+}
+
+function removeAllMessages() {
+    var parent = document.getElementById('message-printer')
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }

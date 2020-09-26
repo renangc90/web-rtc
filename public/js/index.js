@@ -3,10 +3,16 @@ var myStream
 var socket
 const users = new Map()
 
-const { RTCPeerConnection, RTCSessionDescription } = window;
-
 document.addEventListener('DOMContentLoaded', function() {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+
+    document.getElementById('roomForm').addEventListener('submit', enterInRoom)
+    document.getElementById('chatForm').addEventListener('submit', broadcastChatMessage)
+    document.getElementById('leave').addEventListener('click', leave)
+
+    navigator.mediaDevices.getUserMedia({ video: {
+        height: 480,
+        width: 640
+    }, audio: true })
     .then(function (stream) {
         myStream = stream
         setLocalPlayerStream()
@@ -15,24 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(err)
         showFail()
     })
-
-    document.getElementById('roomForm').addEventListener('submit', function (e) {
-        e.preventDefault()
-        room = document.getElementById('inputRoom').value
-    
-        if (room) {
-            socket = initServerConnection(room)
-        }
-    })
-
-    document.getElementById('leave').addEventListener('click', function (e) {
-        e.preventDefault()
-        leave()
-    })
-
-    var localVideo = document.getElementById('local-player')
-    M.Materialbox.init(localVideo)
-
 }, false)
 
 function initServerConnection(room) {
@@ -55,18 +43,18 @@ function initServerConnection(room) {
         user.pc = createPeer(user)
         users.set(data.id, user)
 
-        createOffer(user.pc, data.id, socket)
+        createOffer(user, socket)
     })
 
     socket.on('offer',  function (data) {
         var user = users.get(data.id)
         if (user) {
-            answerPeer(user.pc, data.offer, data.id, socket)
+            answerPeer(user, data.offer, socket)
         } else {
             let user = new User(data.id)
             user.pc = createPeer(user)
             users.set(data.id, user)
-            answerPeer(user.pc, data.offer, data.id, socket)
+            answerPeer(user, data.offer, socket)
         }
     })
 
@@ -102,11 +90,35 @@ function initServerConnection(room) {
     return socket
 }
 
+function enterInRoom (e) {
+    e.preventDefault()
+    room = document.getElementById('inputRoom').value
+
+    if (room) {
+        socket = initServerConnection(room)
+    }
+}
+
+function broadcastChatMessage(e) {
+    e.preventDefault()
+
+    var message = document.getElementById('inputChatMessage').value
+
+    addMessage(message)
+
+    for(var user of users.values()) {
+        user.sendMessage(message)
+    }
+
+    document.getElementById('inputChatMessage').value = ''
+}
+
 function leave() {
     socket.close()
     for(var user of users.values()) {
         user.selfDestroy()
     }
     users.clear()
+    removeAllMessages()
     showForm()
 }

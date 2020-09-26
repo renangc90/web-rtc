@@ -1,3 +1,5 @@
+const { RTCPeerConnection, RTCSessionDescription } = window;
+
 function createPeer (user) {
     const rtcConfiguration = {
         iceServers: [{
@@ -26,30 +28,50 @@ function createPeer (user) {
         }
         user.player = addVideoPlayer(event.streams[0])
     }
+
+    pc.ondatachannel = function (event) {
+        user.dc = event.channel
+        setupDataChannel(user.dc)
+    }
     
     return pc
 }
 
-function createOffer(pc, id, socket) {
-    pc.createOffer().then(function (offer) {
-        pc.setLocalDescription(offer).then(function () {
+function createOffer(user, socket) {
+    user.dc = user.pc.createDataChannel('chat')
+    setupDataChannel(user.dc)
+    
+    user.pc.createOffer().then(function (offer) {
+        user.pc.setLocalDescription(offer).then(function () {
             socket.emit('offer', {
-                id: id,
+                id: user.id,
                 offer: offer
             })
         })
     })
 }
 
-function answerPeer (pc, offer, id, socket) {
-    pc.setRemoteDescription(offer).then(function () {
-        pc.createAnswer().then(function(answer) {
-            pc.setLocalDescription(answer).then(function() {
+function answerPeer (user, offer, socket) {
+    user.pc.setRemoteDescription(offer).then(function () {
+        user.pc.createAnswer().then(function(answer) {
+            user.pc.setLocalDescription(answer).then(function() {
                 socket.emit('answer', {
-                    id: id,
+                    id: user.id,
                     answer: answer
                 })
             })
         })
     })
+}
+
+function setupDataChannel(dataChannel) {
+    dataChannel.onopen = checkDataChannelState
+    dataChannel.onclose = checkDataChannelState
+    dataChannel.onmessage = function(e) {
+        addMessage(e.data)
+    }
+}
+
+function checkDataChannelState(dataChannel) {
+    console.log('WebRTC channel state is:', dataChannel.type)
 }
