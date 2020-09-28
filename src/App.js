@@ -21,10 +21,6 @@ class App {
             console.log(`server up at port: ${this.port}`)
         })
     }
-
-    stop() {
-        
-    }
 }
 
 module.exports = (port) => {
