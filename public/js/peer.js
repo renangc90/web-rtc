@@ -1,9 +1,9 @@
-const { RTCPeerConnection, RTCSessionDescription } = window;
+const { RTCPeerConnection } = window;
 
 function createPeer (user) {
     const rtcConfiguration = {
         iceServers: [{
-          urls: 'stun:stun.l.google.com:19302' // Google's public STUN server
+          urls: 'stun:stun.l.google.com:19302'
         }]
     }
     var pc = new RTCPeerConnection(rtcConfiguration)
