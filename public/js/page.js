@@ -61,10 +61,3 @@ function addMessage(message) {
 
     parent.appendChild(p)
 }
-
-function removeAllMessages() {
-    var parent = document.getElementById('message-printer')
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
