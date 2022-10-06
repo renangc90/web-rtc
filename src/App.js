@@ -15,7 +15,7 @@ class App {
             })
         })
         
-        //app.use(express.static('public'))
+        app.use(express.static('public'))
                 
         http.listen(this.port, () => {
             console.log(`server up at port: ${this.port}`)
