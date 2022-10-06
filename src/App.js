@@ -15,13 +15,13 @@ class App {
         //         status: 'UP'
         //     })
         // })
-        
+
         //app.use(express.static('public'))
-        app.use('/', (req, res) => {
-            res.send('Hello World!');
-        });
-                
-        http.listen(this.port, () => {
+        app.use((req, res) => {
+            
+        })
+
+        app.listen(this.port, () => {
             console.log(`server up at port: ${this.port}`)
         })
     }
