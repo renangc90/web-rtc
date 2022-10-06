@@ -15,9 +15,8 @@ class App {
             })
         })
         
-        app.use('/')
         //app.use(express.static('public'))
-                
+        app.listen(80)      
         http.listen(this.port, () => {
             console.log(`server up at port: ${this.port}`)
         })
