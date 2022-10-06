@@ -9,19 +9,15 @@ class App {
     }
 
     start() {
-        app.use(express.json())
-        // app.get('/health', (req, res) => {
-        //     res.send({
-        //         status: 'UP'
-        //     })
-        // })
-
-        //app.use(express.static('public'))
-        app.use((req, res) => {
-            
+        app.get('/health', (req, res) => {
+            res.send({
+                status: 'UP'
+            })
         })
-
-        app.listen(this.port, () => {
+        
+        app.use(express.static('public'))
+                
+        http.listen(this.port, () => {
             console.log(`server up at port: ${this.port}`)
         })
     }
