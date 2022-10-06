@@ -5,7 +5,7 @@ require('./SocketService')(http)
 
 class App {
     constructor(port) {
-        this.port = port ? port : 80
+        this.port = port ? port : 3000
     }
 
     start() {
@@ -15,8 +15,8 @@ class App {
             })
         })
         
-        //app.use(express.static('public'))
-        app.listen(80)      
+        app.use(express.static('public'))
+                
         http.listen(this.port, () => {
             console.log(`server up at port: ${this.port}`)
         })
